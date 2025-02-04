@@ -1,4 +1,4 @@
-# HTTPS Client ESP32 with JSON Body
+# HTTPS Client ESP32 Request with JSON Body
 
 A simple Arduino sketch for the ESP32 (an Espressif device) that securely connects to a remote server using Wi-Fi and TLS (HTTPS) and passed data to the host using JSON content passed in the request body. The JSON body stuff is an enhancement to the [HTTPS Client ESP32](https://github.com/johnwargo/https-client-esp32) project.
 
