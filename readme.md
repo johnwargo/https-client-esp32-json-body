@@ -4,24 +4,15 @@ A simple Arduino sketch for the ESP32 (an Espressif device) that securely connec
 
 ## Background
 
-I'm working on an Arduino project that requires the ability to connect to a remote server to retrieve some data. In today's environment where security is paramount, the server I connected to (and likely any server you connected to) secures its connection using Transport Layer Security ([TLS](https://en.wikipedia.org/wiki/Transport_Layer_Security)). TLS is used in HTTPS requests to secure the connection.
+In the original HTTPS CLient ESP32 project, the Arduino sketch connects to a remote host (the Bacon Ipsum service) and retrieves a paragraph of text. For this version, I created a cloud function that requires the body of the request contain a JSON object with two properties (`param1` and `param2`).
 
-Initially, I panicked a bit thinking that using HTTPS connections on an Arduino compatible device would be painful. I knew I'd have to manage certificates in my sketch and I wasn't looking forward to embedding certificates in my code and troubleshooting connection issues.
-
-It turns out the process is not that bad, so I decided to build a sample project and publish it. I'll publish the full description on johnwargo.com and update this with a link to the post.
-
-**Note:** To build this example, I started with the Arduino [BasicHTTPSClient](https://github.com/espressif/arduino-esp32/tree/master/libraries/HTTPClient/examples/BasicHttpsClient) sample sketch. That one didn't work for me, so I had to go off on my own and write this.
-
-
-## Target Server
-
-For this sketch, I needed a simple public API to use. Since I frequently use [Bacon Ipsum](https://baconipsum.com/) to generate dummy text for my apps and it has a public (free) JSON API, I decided to use that.
-
-When you click on this link: https://baconipsum.com/api/?type=meat-and-filler&paras=1, the Bacon Ipsum API returns a single paragraph of meat themed content. That's what I needed for this sketch, a quick API call with returned content. 
+All (most) modern cloud servers require Transport Layer Security (TLS) for all connections, so the sketch must be able to connect over a secure connection (HTTPS) and pass the data to the server.
 
 ## Configuring the Sketch
 
 So I don't include my local Wi-Fi network name (SSID) and password in the sketch, I extracted those values to a separate file called `constants.h` and omitted them from this repository. In its place is a file called `constants.h.rename` that you'll use in its place. After downloading the repository, rename the `constants.h.rename` file to `constants.h` and populate it with the information for your local Wi-Fi network.
+
+### Network Settings
 
 Populate the two `#define` statements with the Wi-Fi network name (`ssid`) and password:
 
@@ -37,7 +28,24 @@ When you're done, the file should look something like this:
 #define WIFI_PSWD "Some Complicated Wi-Fi Password"
 ```
 
-with, of course, your network name and password in there except for the ones I made up.
+With, of course, your network name and password in there except for the ones I made up.
+
+### Parameter Array
+The configuration file also defines a two-dimensional String array `parmsArray` that stores the key/value pairs passed to the host in the request body (in JSON format). 
+
+```c
+const int PARAM_ROWS = 2;
+String paramsArray[PARAM_ROWS][2] = {
+  { "param1", "" },
+  { "param2", "" }
+};
+```
+
+The host requires the JSON object to have the two listed properties (`param1` & `param2`). Right now, the values for those properties are empty, so if you run the sketch, the request will fail and you'll get a message back complaining about "missing parameters". Populate the values in the array with whatever you want and try again and it should work.
+
+You can also increase the value in `PARAM_ROWS` and add one or more rows to the table. The server only cares about the two listed parameters, so anything else is ignored.
+
+## Loading the Configuration Settings
 
 The sketch loads the configuration settings in this line in the sketch:
 
@@ -45,11 +53,9 @@ The sketch loads the configuration settings in this line in the sketch:
 #include "config.h"
 ```
 
-## Embedding the Certificate
+## Server Certificate
 
-There are a several articles on the Internet that describe how to use certificates in an Arduino sketch. The one I started with is [ESP32 HTTPS Requests (Arduino IDE)](https://randomnerdtutorials.com/esp32-https-requests/). If it wasn't so ridiculously full of advertisements, it would be a more useful article, but it does describe how to use a Certificate Authority Certificate in an Arduino sketch. 
-
-I created an automated process for converting a downloaded certificate file into the code needed to use it in an Arduino Sketch, you can find the details in [Automated Public Cert to Arduino Header Conversion](https://johnwargo.com/posts/2025/public-cert-arduino/). The end result is a file in the sketch called `caCert.h` that contains the public key for the root certificate used for the Bacon Ipsum API server.
+The project includes the server Certificate Authority (CA) certificate for the host. Without this, the HTTPS connection fails. I downloaded the certificate using [Automated Public Cert to Arduino Header Conversion](https://johnwargo.com/posts/2025/public-cert-arduino/) and converted it using the [Cert2Arduino](https://cert2arduino.netlify.app/) application. The end result is a file in the sketch called `cert.h` that contains the public key for the root certificate used for the server.
 
 Keeping the certificate in a separate file makes your code a lot easier to read. The sketch loads it using the following:
 
@@ -75,7 +81,9 @@ Response Payload: Received "This" & "That"
 Waiting 30 seconds...
 ```
 
-In this case, the sketch connects to the Bacon Ipsum API and returns a 200 response (200) and a single line of meatty content.
+The sketch connects to the cloud function, passes the parameters as a JSON 
+
+Bacon Ipsum API and returns a 200 response (200) and a single line of meatty content.
 
 Every 30 seconds, the sketch goes back for more content. I could have made the sketch only connect once, but what's the fun in that. I added a longer wait than the example sketch I started with since I didn't want to send too many requests to the server and have them block me for too many requests.
 

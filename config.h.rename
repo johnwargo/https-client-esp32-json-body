@@ -1,2 +1,8 @@
 #define WIFI_SSID ""
 #define WIFI_PSWD ""
+
+const int PARAM_ROWS = 2;
+String paramsArray[PARAM_ROWS][2] = {
+  { "param1", "This" },
+  { "param2", "That" }
+};
