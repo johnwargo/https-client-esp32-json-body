@@ -81,11 +81,9 @@ Response Payload: Received "This" & "That"
 Waiting 30 seconds...
 ```
 
-The sketch connects to the cloud function, passes the parameters as a JSON 
+The sketch connects to the cloud function and passes the JSON parameters in the request body. The server validates the request body and returns an HTTP code of 200 (OK) for success or 400 (Bad Request) based on the availability of the `param1` and `param2` values in the request body. 
 
-Bacon Ipsum API and returns a 200 response (200) and a single line of meatty content.
-
-Every 30 seconds, the sketch goes back for more content. I could have made the sketch only connect once, but what's the fun in that. I added a longer wait than the example sketch I started with since I didn't want to send too many requests to the server and have them block me for too many requests.
+Every 30 seconds, the sketch goes back for more content. I could have made the sketch only connect once, but what's the fun in that. Please do me a favor and don't leave the sketch running too long as I'm paying for the cloud function the sketch calls.
 
 ***
 
