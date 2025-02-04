@@ -1,6 +1,6 @@
 # HTTPS Client ESP32 with JSON Body
 
-A simple Arduino sketch for the ESP32 (an Espressif device) that securely connects to a remote server using Wi-Fi and TLS (HTTPS) and passed data to the host using JSON content passed in the request body. The JSON body stuff is an enhancement to the [HTTPS Client ESP32 Example](https://github.com/johnwargo/https-client-esp32) project.
+A simple Arduino sketch for the ESP32 (an Espressif device) that securely connects to a remote server using Wi-Fi and TLS (HTTPS) and passed data to the host using JSON content passed in the request body. The JSON body stuff is an enhancement to the [HTTPS Client ESP32](https://github.com/johnwargo/https-client-esp32) project.
 
 
 ```text
@@ -79,15 +79,15 @@ Keeping the certificate in a separate file makes your code a lot easier to read.
 When you compile and run the sketch with the Monitor open, you'll see something like this:
 
 ```text
-Connecting to MyNetwork:
-..........
-Wi-Fi connected
-IP address: 192.168.86.82
+Connecting to https://us-east1-jmw-demos.cloudfunctions.net/jsonbody
+Building POST body
+Body: { "param1": "This", "param2": "That" }
 
-[HTTPS] Begin
-[HTTPS] GET
-[HTTPS] Response: 200
-["Proident sint ullamco ham ut.  Venison capicola jerky beef short loin aliqua.  Beef ribs cupidatat magna, jerky voluptate bresaola occaecat ullamco shank proident minim fatback salami.  Occaecat spare ribs venison enim.  Ham tenderloin eu est sirloin."]
+Executing POST request
+HTTPS response: 200
+Success
+Content length: 24
+Response Payload: Received "This" & "That"
 
 Waiting 30 seconds...
 ```
