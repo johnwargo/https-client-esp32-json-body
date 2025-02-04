@@ -2,23 +2,6 @@
 
 A simple Arduino sketch for the ESP32 (an Espressif device) that securely connects to a remote server using Wi-Fi and TLS (HTTPS) and passed data to the host using JSON content passed in the request body. The JSON body stuff is an enhancement to the [HTTPS Client ESP32](https://github.com/johnwargo/https-client-esp32) project.
 
-
-```text
-Connecting to https://us-east1-jmw-demos.cloudfunctions.net/jsonbody
-Building POST body
-Body: { "param1": "This", "param2": "That" }
-
-Executing POST request
-HTTPS response: 200
-Success
-Content length: 24
-Response Payload: Received "This" & "That"
-
-Waiting 30 seconds...
-```
-
-
-
 ## Background
 
 I'm working on an Arduino project that requires the ability to connect to a remote server to retrieve some data. In today's environment where security is paramount, the server I connected to (and likely any server you connected to) secures its connection using Transport Layer Security ([TLS](https://en.wikipedia.org/wiki/Transport_Layer_Security)). TLS is used in HTTPS requests to secure the connection.
