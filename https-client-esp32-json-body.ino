@@ -16,11 +16,11 @@ const char *ssid = WIFI_SSID;
 const char *pswd = WIFI_PSWD;
 const char *targetHost = "https://us-east1-jmw-demos.cloudfunctions.net/jsonbody";
 
-int counter = 0;
-int responseCode;
-
 WiFiClientSecure *client = new WiFiClientSecure;
 HTTPClient https;
+
+int counter = 0;
+int responseCode;
 
 void setup() {
   Serial.begin(115200);
@@ -49,7 +49,7 @@ void setup() {
 
   if (client) {
     Serial.println("Client created successfully");
-    // assign the Cert Authorith cert to the client object
+    // assign the Cert Authority cert to the client object
     client->setCACert(caCert);
   } else {
     // this should never happen
